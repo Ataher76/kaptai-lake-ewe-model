@@ -16,10 +16,10 @@ Kaptai Lake is the largest reservoir in Bangladesh. This project utilizes a mass
 
 ## Data Availability
 The datasets and models in this repository are permanently archived on Zenodo:
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX) 
-*(Note: Update with your actual Zenodo DOI link once generated)*
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.21630377)
 
 ## Contact
 **Ataher Ali**
+ataher.cu.ms@gmail.com
 Department of Fisheries, University of Chittagong
 Chattogram-4331, Bangladesh
