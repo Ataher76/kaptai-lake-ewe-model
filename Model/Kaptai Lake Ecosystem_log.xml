@@ -1801,4 +1801,146 @@ Object name: 'Icon'.</Message>
   Date="1:09:52 PM Monday, July 27, 2026">
   <Message>Model closed</Message>
 </Log_Message>
+<Session_Started
+  Date="3:05:44 AM Wednesday, July 29, 2026">
+  <Model>Kaptai Lake Ecosystem</Model>
+  <LogFile>D:\Project Work\Saheen sir\Keya Apu\Ecosystem Modeling\For Github\Model\Kaptai Lake Ecosystem_log.xml</LogFile>
+  <Is64BitExe>True</Is64BitExe>
+  <CultureOS>English (United States)</CultureOS>
+  <CultureUI>English (United States)</CultureUI>
+  <DecimalSeparator>.</DecimalSeparator>
+</Session_Started>
+<Information_Message
+  Date="3:05:44 AM Wednesday, July 29, 2026">
+  <Message>Ecopath model 'D:\Project Work\Saheen sir\Keya Apu\Ecosystem Modeling\For Github\Model\Kaptai Lake Ecosystem.EwEmdb' loaded.</Message>
+  <Message_Type>DataAddedOrRemoved</Message_Type>
+  <Message_Source>EcoPath</Message_Source>
+  <Message_DataType>NotSet</Message_DataType>
+</Information_Message>
+<Exception_Messages
+  Date="3:05:45 AM Wednesday, July 29, 2026">
+  <Detail>cPluginManager.LoadPluginAssembly::LoadFrom(C:\Program Files\Ecopath with Ecosim 6.6.8_64-bit_setup\Includes\LPSolve\win32\lpsolve55.dll)</Detail>
+  <Exception>
+    <Type>System.BadImageFormatException</Type>
+    <Source>mscorlib</Source>
+    <Message>Could not load file or assembly 'file:///C:\Program Files\Ecopath with Ecosim 6.6.8_64-bit_setup\Includes\LPSolve\win32\lpsolve55.dll' or one of its dependencies. The module was expected to contain an assembly manifest.</Message>
+  </Exception>
+  <StackTrace>
+    <Method>
+      <Name>_nLoad</Name>
+      <Line>0</Line>
+    </Method>
+    <Method>
+      <Name>InternalLoadAssemblyName</Name>
+      <Line>0</Line>
+    </Method>
+    <Method>
+      <Name>InternalLoadFrom</Name>
+      <Line>0</Line>
+    </Method>
+    <Method>
+      <Name>LoadFrom</Name>
+      <Line>0</Line>
+    </Method>
+    <Method>
+      <Name>LoadPluginAssembly</Name>
+      <Line>0</Line>
+    </Method>
+  </StackTrace>
+</Exception_Messages>
+<Exception_Messages
+  Date="3:05:45 AM Wednesday, July 29, 2026">
+  <Detail>cPluginManager.LoadPluginAssembly::LoadFrom(C:\Program Files\Ecopath with Ecosim 6.6.8_64-bit_setup\Includes\LPSolve\win64\lpsolve55.dll)</Detail>
+  <Exception>
+    <Type>System.BadImageFormatException</Type>
+    <Source>mscorlib</Source>
+    <Message>Could not load file or assembly 'file:///C:\Program Files\Ecopath with Ecosim 6.6.8_64-bit_setup\Includes\LPSolve\win64\lpsolve55.dll' or one of its dependencies. The module was expected to contain an assembly manifest.</Message>
+  </Exception>
+  <StackTrace>
+    <Method>
+      <Name>_nLoad</Name>
+      <Line>0</Line>
+    </Method>
+    <Method>
+      <Name>InternalLoadAssemblyName</Name>
+      <Line>0</Line>
+    </Method>
+    <Method>
+      <Name>InternalLoadFrom</Name>
+      <Line>0</Line>
+    </Method>
+    <Method>
+      <Name>LoadFrom</Name>
+      <Line>0</Line>
+    </Method>
+    <Method>
+      <Name>LoadPluginAssembly</Name>
+      <Line>0</Line>
+    </Method>
+  </StackTrace>
+</Exception_Messages>
+<Log_Message
+  Date="3:05:46 AM Wednesday, July 29, 2026">
+  <Message>Unable to obtain server time</Message>
+</Log_Message>
+<Entry>
+  <Formcannotberesolved>frmEwE6 cmdNavigate OnInvoke</Formcannotberesolved>
+</Entry>
+<Entry>
+  <Formcannotberesolved>frmEwE6 cmdNavigate OnInvoke</Formcannotberesolved>
+</Entry>
+<Information_Message
+  Date="3:06:10 AM Wednesday, July 29, 2026">
+  <Message>Ecopath run completed.</Message>
+  <Message_Type>Any</Message_Type>
+  <Message_Source>EcoPath</Message_Source>
+  <Message_DataType>NotSet</Message_DataType>
+</Information_Message>
+<Entry>
+  <Formcannotberesolved>frmEwE6 cmdNavigate OnInvoke</Formcannotberesolved>
+</Entry>
+<Entry>
+  <Formcannotberesolved>frmEwE6 cmdNavigate OnInvoke</Formcannotberesolved>
+</Entry>
+<Entry>
+  <Formcannotberesolved>frmEwE6 cmdNavigate OnInvoke</Formcannotberesolved>
+</Entry>
+<Log_Message
+  Date="4:44:40 AM Wednesday, July 29, 2026">
+  <Message>EwECore.SpatialData.cSpatialDataSetManager Failed to stop run when loading new model.</Message>
+</Log_Message>
+<Question_Message
+  Date="4:44:40 AM Wednesday, July 29, 2026">
+  <Message>Unsaved changes in Ecopath will be lost if you proceed. Do you wish to save these changes?</Message>
+  <Message_Type>Any</Message_Type>
+  <Message_Source>Core</Message_Source>
+  <Message_DataType>NotSet</Message_DataType>
+  <Message_Reply>YES</Message_Reply>
+  <Message_Suppressable>False</Message_Suppressable>
+  <Message_Suppressed>False</Message_Suppressed>
+</Question_Message>
+<Log_Message
+  Date="4:44:46 AM Wednesday, July 29, 2026">
+  <Message>Ecotracer scenario closed</Message>
+</Log_Message>
+<Log_Message
+  Date="4:44:46 AM Wednesday, July 29, 2026">
+  <Message>Ecospace scenario closed</Message>
+</Log_Message>
+<Log_Message
+  Date="4:44:46 AM Wednesday, July 29, 2026">
+  <Message>Ecospace scenario closed</Message>
+</Log_Message>
+<Log_Message
+  Date="4:44:46 AM Wednesday, July 29, 2026">
+  <Message>Ecotracer scenario closed</Message>
+</Log_Message>
+<Log_Message
+  Date="4:44:46 AM Wednesday, July 29, 2026">
+  <Message>Ecosim scenario closed</Message>
+</Log_Message>
+<Log_Message
+  Date="4:44:46 AM Wednesday, July 29, 2026">
+  <Message>Model closed</Message>
+</Log_Message>
 </doc>

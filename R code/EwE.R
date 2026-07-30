@@ -155,16 +155,279 @@ ggsave(
 )
 
 
+### Plotting the stacked barplot for reconstracted catch data
+
+# Load required libraries
+library(readxl)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(scales) # For clean comma formatting on the y-axis
+
+# 1. Load your reconstructed data
+
+catch_data <- read_excel("data.xlsx", sheet = 3)
+
+# 2. Reshape the data and map species to their Functional Groups
+catch_grouped <- catch_data %>%
+  # Pivot from wide to long format
+  pivot_longer(
+    cols = -Species, 
+    names_to = "Year",
+    values_to = "Catch"
+  ) %>%
+  # Clean up year formatting if R added an "X" or "." during import (e.g., X2010.11 -> 2010-11)
+  mutate(Year = gsub("X", "", Year),
+         Year = gsub("\\.", "-", Year)) %>%
+  # Group the 17 species into the Functional Groups defined in your Table 1
+  mutate(Functional_Group = case_when(
+    Species %in% c("Labeo rohita", "Catla catla", "Cirrhinus mrigala", "Labeo calbasu", "Labeo bata") ~ "Carp",
+    Species %in% c("Channa striata", "Channa punctata") ~ "Snakehead",
+    Species %in% c("Puntius sarana", "A. mola") ~ "Minnows",
+    Species %in% c("Corica soborna", "Gudusia chapra") ~ "Clupeid",
+    Species %in% c("Wallago attu", "Ompok pabda", "Mystus gulio") ~ "Catfish",
+    Species == "O. niloticus" ~ "Tilapia",
+    Species == "N. notopterus" ~ "Knifefish",
+    Species == "A. testudineus" ~ "Anabas",
+    TRUE ~ "Other" # Fallback just in case
+  )) %>%
+  # Summarize the catch by Year and Functional Group to prepare for the stacked plot
+  group_by(Year, Functional_Group) %>%
+  summarise(Total_Catch = sum(Catch, na.rm = TRUE), .groups = 'drop')
+
+# 3. Generate the publication-ready stacked barplot
+stacked_plot <- ggplot(catch_grouped, aes(x = Year, y = Total_Catch, fill = Functional_Group)) +
+  # Use stat="identity" and add a thin black border to separate stacks
+  geom_bar(stat = "identity", position = "stack", color = "black", linewidth = 0.2) +
+  
+  # Use a vibrant, colorblind-friendly palette
+  scale_fill_viridis_d(option = "turbo") + 
+  
+  # Format Y-axis numbers with commas (e.g., 20,000 instead of 2e+04)
+  scale_y_continuous(labels = comma) +
+  
+  # Add clear, academic labels
+  labs(
+    title = "Reconstructed Annual Catch of Kaptai Lake by Functional Group (2010–2020)",
+    x = "Timeline",
+    y = "Total Reconstructed Yield (Metric Tons)",
+    fill = "Functional Group"
+  ) +
+  
+  # Apply a clean theme suited for graphical abstracts
+  theme_minimal(base_size = 14) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, face = "bold", color = "black"),
+    axis.text.y = element_text(face = "bold", color = "black"),
+    axis.title = element_text(face = "bold"),
+    legend.position = "right",
+    legend.text = element_text(color = "black"), 
+    legend.title = element_text(face = "bold"),
+    panel.grid.major.x = element_blank(), # Remove vertical grid lines for a cleaner look
+    panel.grid.minor = element_blank(),
+    panel.background = element_rect(fill = "white", color = NA),
+    plot.background = element_rect(fill = "white", color = NA)
+  )
+
+# View the plot
+print(stacked_plot)
+
+# 4. Save the plot in high resolution for your manuscript
+ ggsave("Kaptai_Reconstructed_StackedBar.png", plot = stacked_plot, width = 10, height = 6, dpi = 300)
 
 
 
+ ### plotting trophic spectra of biomass and catch
 
+ # Load required libraries
+library(ggplot2)
+library(dplyr)
+library(tidyr)
 
+# 1. Recreate the data (using approximate values from your plot)
+# Replace these with the exact values from your EwE output
+trophic_data <- data.frame(
+  Trophic_Level = c("I", "II", "III", "IV", "V", "VI", "VII"),
+  Biomass = c(4.5, 9.0, 4.2, 0.2, 0, 0, 0),
+  Catch = c(0, 6.2, 8.0, 0.1, 0, 0, 0)
+)
 
+# 2. Filter out the empty bars (remove rows where both metrics are 0)
+trophic_filtered <- trophic_data %>%
+  filter(Biomass > 0 | Catch > 0)
 
+# Lock the factor levels so they maintain the correct Roman numeral order
+trophic_filtered$Trophic_Level <- factor(trophic_filtered$Trophic_Level, levels = trophic_filtered$Trophic_Level)
 
+# 3. Reshape and invert Catch values for the downward plot
+trophic_long <- trophic_filtered %>%
+  pivot_longer(cols = c(Biomass, Catch), names_to = "Metric", values_to = "Value") %>%
+  # If the metric is Catch, make it negative so it plots downwards
+  mutate(Plot_Value = ifelse(Metric == "Catch", -Value, Value))
 
+# 4. Create the Mirrored Bar Chart
+mirrored_plot <- ggplot(trophic_long, aes(x = Trophic_Level, y = Plot_Value, fill = Metric)) +
+  
+  # Add the bars
+  geom_col(color = "black", width = 0.85, alpha = 0.9) +
+  
+  # Add a strong central zero-line (the common X-axis)
+  geom_hline(yintercept = 0, color = "black", linewidth = 1) +
+  
+  # Match the vibrant color scheme from your previous plots
+  scale_fill_manual(values = c("Biomass" = "#2ecc71", "Catch" = "#e67e22")) +
+  
+  # Format Y-axis: Use absolute values so negative catch numbers appear positive
+  scale_y_continuous(
+    labels = abs, 
+    breaks = seq(-10, 10, by = 2.5), # Adjust 'by' depending on your exact data range
+    name = expression(bold("Amount (t/km"^2*"/year)"))
+  ) +
+  
+  # Clean academic titles and labels
+  labs(
+    title = "Trophic Spectra of Kaptai Lake",
+    x = "Discrete Trophic Level"
+  ) +
+  
+  # Apply a clean, publication-ready theme suitable for a Graphical Abstract
+  theme_minimal(base_size = 14) +
+  theme(
+    axis.text = element_text(color = "black", face = "bold"),
+    axis.title = element_text(face = "bold"),
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    legend.position = "top", # Moving legend to the top saves horizontal space
+    legend.title = element_blank(),
+    legend.text = element_text(face = "bold", size = 12),
+    panel.background = element_rect(fill = "white", color = "black", linewidth = 0.5),
+    plot.background = element_rect(fill = "white", color = NA),
+    panel.grid.minor = element_blank()
+  )
 
+# View the perfectly formatted mirrored plot
+print(mirrored_plot)
 
+# Save as a high-resolution PDF
+# ggsave("Kaptai_Mirrored_Spectra.pdf", plot = mirrored_plot, width = 7, height = 6, device = "pdf")
 
-
+# Keystoneness Index Scatter Plot
+ 
+ library(ggplot2)
+ library(ggrepel)
+ 
+ # 1. Load the data
+ data <- read.csv("Keystoneness_Index.csv", check.names = FALSE)
+ 
+ # 2. Create a new combined label: "Group Name \n (Biomass)"
+ # The \n puts the biomass on a new line right under the name so it stays compact
+ data$Plot_Label <- paste0(data$`Group name`, "\n(", data$Biomass, ")")
+ 
+ # 3. Create the streamlined plot
+ ks_direct_plot <- ggplot(data, aes(x = `Relative total impact`, y = `Keystone index #1`)) +
+   
+   geom_point(aes(size = Biomass, color = `Group name`), alpha = 0.8, shape = 21, fill = "white", stroke = 1.5) +
+   scale_size_continuous(range = c(5, 20)) +
+   scale_color_viridis_d(option = "turbo") +
+   
+   # Use the new combined label
+   geom_text_repel(aes(label = Plot_Label, color = `Group name`), 
+                   fontface = "bold", size = 4.5, box.padding = 0.8, 
+                   point.padding = 1, max.overlaps = Inf,
+                   segment.color = "grey50", segment.size = 0.5,
+                   lineheight = 0.9) + # lineheight tightens the gap between the two text lines
+   
+   labs(
+     title = "Keystoneness vs. Ecosystem Impact in Kaptai Lake",
+     x = "Relative Total Impact (Overall Effect)",
+     y = expression(bold("Keystone Index #1"))
+   ) +
+   
+   theme_minimal(base_size = 14) +
+   theme(
+     axis.text = element_text(color = "black", face = "bold", size = 12),
+     axis.title = element_text(face = "bold", size = 14),
+     panel.background = element_rect(fill = "white", color = "black", linewidth = 0.5),
+     plot.background = element_rect(fill = "white", color = NA),
+     panel.grid.minor = element_blank(),
+     plot.title = element_text(face = "bold", size = 16),
+     legend.position = "none" # Completely removes ALL legends for maximum plot space
+   )
+ 
+ print(ks_direct_plot)
+ ggsave("Kaptai_DirectLabel_Keystoneness.pdf", plot = ks_direct_plot, width = 10, height = 7, device = "pdf")
+ 
+ 
+ 
+ # Modified trophic spectra plot for catch and biomass
+ # Load required libraries
+ library(ggplot2)
+ library(dplyr)
+ library(tidyr)
+ 
+ # 1. Recreate the data (using approximate values from your plot)
+ # Replace these with the exact values from your EwE output
+ trophic_data <- data.frame(
+   Trophic_Level = c("I", "II", "III", "IV", "V", "VI", "VII"),
+   Biomass = c(4.5, 9.0, 4.2, 0.2, 0, 0, 0),
+   Catch = c(0, 6.2, 8.0, 0.1, 0, 0, 0)
+ )
+ 
+ # 2. Filter out the empty bars (remove rows where both metrics are 0)
+ trophic_filtered <- trophic_data %>%
+   filter(Biomass > 0 | Catch > 0)
+ 
+ # Lock the factor levels so they maintain the correct Roman numeral order
+ trophic_filtered$Trophic_Level <- factor(trophic_filtered$Trophic_Level, levels = trophic_filtered$Trophic_Level)
+ 
+ # 3. Reshape and invert Catch values for the downward plot
+ trophic_long <- trophic_filtered %>%
+   pivot_longer(cols = c(Biomass, Catch), names_to = "Metric", values_to = "Value") %>%
+   # If the metric is Catch, make it negative so it plots downwards
+   mutate(Plot_Value = ifelse(Metric == "Catch", -Value, Value))
+ 
+ # 4. Create the Mirrored Bar Chart
+ mirrored_plot <- ggplot(trophic_long, aes(x = Trophic_Level, y = Plot_Value, fill = Metric)) +
+   
+   # Add the bars
+   geom_col(color = "black", width = 0.85, alpha = 0.9) +
+   
+   # Add a strong central zero-line (the common X-axis)
+   geom_hline(yintercept = 0, color = "black", linewidth = 1) +
+   
+   # Match the vibrant color scheme from your previous plots
+   scale_fill_manual(values = c("Biomass" = "#2ecc71", "Catch" = "#e67e22")) +
+   
+   # Format Y-axis: Use absolute values so negative catch numbers appear positive
+   scale_y_continuous(
+     labels = abs, 
+     breaks = seq(-10, 10, by = 2.5), # Adjust 'by' depending on your exact data range
+     name = expression(bold("Amount (t/km"^2*"/year)"))
+   ) +
+   
+   # Clean academic titles and labels
+   labs(
+     title = "Trophic Spectra of Kaptai Lake",
+     x = "Discrete Trophic Level"
+   ) +
+   
+   # Apply a clean, publication-ready theme suitable for a Graphical Abstract
+   theme_minimal(base_size = 14) +
+   theme(
+     axis.text = element_text(color = "black", face = "bold"),
+     axis.title = element_text(face = "bold"),
+     plot.title = element_text(face = "bold", hjust = 0.5),
+     legend.position = "top", # Moving legend to the top saves horizontal space
+     legend.title = element_blank(),
+     legend.text = element_text(face = "bold", size = 12),
+     panel.background = element_rect(fill = "white", color = "black", linewidth = 0.5),
+     plot.background = element_rect(fill = "white", color = NA),
+     panel.grid.minor = element_blank()
+   )
+ 
+ # View the perfectly formatted mirrored plot
+ print(mirrored_plot)
+ 
+ # Save as a high-resolution PDF
+  ggsave("Kaptai_Mirrored_Spectra.pdf", plot = mirrored_plot, width = 7, height = 6, device = "pdf")
+ 
+ 
